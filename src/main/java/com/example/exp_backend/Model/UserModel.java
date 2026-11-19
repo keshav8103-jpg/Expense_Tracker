@@ -13,16 +13,9 @@ public class UserModel
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long userId;
-
-    @Column(nullable = false)
     private String name;
-
-    @Column(unique = true, nullable = false, length = 500)
     private String email;
-
-    @Column(nullable = false)
     private String password;
-
     private String profileImg;   
 
     public UserModel()
@@ -39,7 +32,7 @@ public class UserModel
         this.profileImg=profileImg;
     }
 
-    public void setId(Long userId)
+    public void setUserId(Long userId)
     {
         this.userId=userId;
     }
@@ -61,7 +54,7 @@ public class UserModel
     }
 
 
-    public Long getId()
+    public Long getUserId()
     {
         return userId;
     }

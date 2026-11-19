@@ -7,6 +7,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+import com.example.exp_backend.Model.UserModel;
+
 @Entity
 public class TransactionModel 
 {
@@ -20,6 +24,14 @@ public class TransactionModel
     private String type;
     private LocalDate date;
     private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserModel user;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private CategoryModel category;
 
     public TransactionModel()
     {
@@ -86,5 +98,25 @@ public class TransactionModel
 
     public String getDescription() {
         return description;
+    }
+
+    public void setUser(UserModel user)
+    {
+        this.user = user;
+    }
+
+    public UserModel getUser()
+    {
+        return user;
+    }
+
+    public void setCategory(CategoryModel category)
+    {
+        this.category = category;
+    }
+
+    public CategoryModel getCategory()
+    {
+        return category;
     }
 }

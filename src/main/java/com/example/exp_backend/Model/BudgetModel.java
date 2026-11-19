@@ -6,6 +6,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+
 @Entity
 public class BudgetModel 
 {
@@ -17,6 +20,10 @@ public class BudgetModel
     private Double amount;
     private String period;
     private LocalDate startDate;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserModel user;
 
     public BudgetModel()
     {
@@ -72,5 +79,15 @@ public class BudgetModel
 
     public LocalDate getStartDate() {
         return startDate;
+    }
+
+    public void setUser(UserModel user)
+    {   
+        this.user = user;
+    }
+
+    public UserModel getUser()
+    {
+        return user;
     }
 }
