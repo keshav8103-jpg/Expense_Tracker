@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.exp_backend.Model.BudgetModel;
 import com.example.exp_backend.Service.BudgetService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/budgets")
@@ -28,7 +30,7 @@ public class BudgetController
 
     //add budget------
     @PostMapping
-    public BudgetModel addBudget(@RequestBody BudgetModel budget)
+    public BudgetModel addBudget(@Valid @RequestBody BudgetModel budget)
     {
         return budgetService.addBudget(budget);
     }
@@ -50,7 +52,7 @@ public class BudgetController
     //update budgets-----
     @PutMapping("/{id}")
     public BudgetModel updateBudget(
-        @RequestBody BudgetModel budget,
+        @Valid @RequestBody BudgetModel budget,
         @PathVariable Long id)
     {
         return budgetService.updateBudget(budget, id);

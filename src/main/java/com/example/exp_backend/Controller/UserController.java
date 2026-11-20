@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.exp_backend.Model.UserModel;
 import com.example.exp_backend.Service.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController 
 @CrossOrigin("*")
 @RequestMapping("/api/users")
@@ -26,7 +28,7 @@ public class UserController
 
     //adddd user----------------------------
     @PostMapping
-    public UserModel adduser(@RequestBody UserModel newUser)
+    public UserModel adduser(@Valid @RequestBody UserModel newUser)
     {
        return userService.addUser(newUser);
     } 
@@ -49,7 +51,7 @@ public class UserController
     @PutMapping("/{id}")
     public UserModel updateUser(
         @PathVariable Long id, 
-        @RequestBody UserModel updateUser)
+       @Valid @RequestBody UserModel updateUser)
     {
         return userService.updateUser(id, updateUser);
     }

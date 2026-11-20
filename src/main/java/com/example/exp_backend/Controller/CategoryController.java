@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.exp_backend.Model.CategoryModel;
 import com.example.exp_backend.Service.CategoryService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/categories")
@@ -27,7 +29,7 @@ public class CategoryController
     
 
     @PostMapping 
-    public CategoryModel addCategory(@RequestBody CategoryModel category)
+    public CategoryModel addCategory(@Valid @RequestBody CategoryModel category)
     {
         return categoryService.addCategory(category);
     }
@@ -46,7 +48,7 @@ public class CategoryController
 
     @PutMapping("/{id}")
     public CategoryModel updateCategory(
-        @RequestBody CategoryModel category
+       @Valid @RequestBody CategoryModel category
         ,@PathVariable Long id)
     {
         return categoryService.updateCategory(id, category);

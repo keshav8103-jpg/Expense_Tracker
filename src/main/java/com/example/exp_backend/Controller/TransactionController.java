@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.exp_backend.Model.TransactionModel;
 import com.example.exp_backend.Service.TransactionService;
 
+import jakarta.validation.Valid;
+
 @RestController 
 @CrossOrigin("*")
 @RequestMapping("/api/transactions")
@@ -28,7 +30,7 @@ public class TransactionController
 
     //add transaction-----
     @PostMapping 
-    public TransactionModel addTransaction(@RequestBody TransactionModel transaction)
+    public TransactionModel addTransaction(@Valid @RequestBody TransactionModel transaction)
     {
         return transactionService.addTransaction(transaction);
     }
@@ -49,7 +51,7 @@ public class TransactionController
 
     //update transaction-----
     @PutMapping("/{id}")
-    public TransactionModel updateTransaction(@PathVariable Long id, @RequestBody TransactionModel transaction)
+    public TransactionModel updateTransaction(@PathVariable Long id, @Valid @RequestBody TransactionModel transaction)
     {
         return transactionService.updateTransaction(id,transaction);
     }

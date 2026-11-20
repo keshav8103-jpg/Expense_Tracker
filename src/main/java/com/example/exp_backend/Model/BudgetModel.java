@@ -7,6 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.persistence.JoinColumn;
 
 @Entity
@@ -16,9 +19,18 @@ public class BudgetModel
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     
     private Long id;
+
+    @NotBlank(message ="Budget name is required")
     private String name;
+
+    @NotNull(message ="Amount is required")
+    @Positive(message = "Amount must be greater than zero")
     private Double amount;
+
+    @NotBlank(message ="Budget period is required")
     private String period;
+
+    @NotNull(message ="Start date is required")
     private LocalDate startDate;
 
     @ManyToOne

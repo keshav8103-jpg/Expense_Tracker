@@ -8,8 +8,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import jakarta.persistence.JoinColumn;
-import com.example.exp_backend.Model.UserModel;
 
 @Entity
 public class TransactionModel 
@@ -19,10 +22,22 @@ public class TransactionModel
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 
     private Long id;
+
+    @NotBlank(message = "Transaction title is required")
+    @Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")
     private String title;
+    
+    @NotNull(message="Transaction amount is required")
+    @Positive(message = "Amount must be greater than zero")
     private Double amount;
+
+    @NotBlank(message ="Transaction type is required")
     private String type;
+
+    @NotNull(message ="Transaction Date is required")
     private LocalDate date;
+
+    @Size(max = 200, message = "Description cannot exceed 200 characters")
     private String description;
 
     @ManyToOne
