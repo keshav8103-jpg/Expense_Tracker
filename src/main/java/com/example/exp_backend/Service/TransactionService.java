@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.exp_backend.Exception.ResourceNotFoundException;
 import com.example.exp_backend.Model.CategoryModel;
 import com.example.exp_backend.Model.TransactionModel;
 import com.example.exp_backend.Model.UserModel;
@@ -28,16 +29,39 @@ public class TransactionService
     //addd transaction------------------
     public TransactionModel addTransaction(TransactionModel transaction)
     {
+
+        //check user----------
+        if(transaction.getUser()==null || 
+            transaction.getUser().getUserId()==null)
+        {
+            throw new IllegalArgumentException("User id is required");
+        }
+
+        //chech category-----
+        if(transaction.getCategory()==null || 
+            transaction.getCategory().getId()==null)
+        {
+            throw new IllegalArgumentException("Category id is required");
+        }
+
+
         Long userId = transaction.getUser().getUserId();
         Long categoryId = transaction.getCategory().getId();
 
-        UserModel user = userRepo.findById(userId).orElse(null);
-        CategoryModel category = categoryRepo.findById(categoryId).orElse(null);
+        // find user --------------
+        UserModel user = userRepo.findById(userId)
+            .orElseThrow(() ->
+                new ResourceNotFoundException
+                ("User not Found with id :"+ userId)
+            );
 
-        if(user==null || category==null)
-        {
-            return null;
-        }
+        //find category----------
+        CategoryModel category = categoryRepo.findById(categoryId)
+            .orElseThrow(() ->
+                new ResourceNotFoundException
+                ("Category not found with id :"+ categoryId)
+            );    
+
         transaction.setUser(user);
         transaction.setCategory(category);
 
@@ -53,59 +77,83 @@ public class TransactionService
     //get transaction by id-------------
     public TransactionModel getTransactionById(Long id)
     {
-        return transactionRepo.findById(id).orElse(null);
+        return transactionRepo.findById(id)
+            .orElseThrow(() ->
+            new ResourceNotFoundException
+            ("Transaction not found with id :"+ id)
+        );
     }
 
     //update transaction--------------
-    public TransactionModel updateTransaction(Long id,TransactionModel updateTransaction)
+   
+    public TransactionModel updateTransaction(Long id, TransactionModel updateTransaction)
     {
-        TransactionModel transaction=transactionRepo.findById(id).orElse(null);
+        TransactionModel transaction = transactionRepo.findById(id)
+            .orElseThrow(() -> 
+            new ResourceNotFoundException
+            ("Transaction not found with id :"+ id)   
+        );
 
-        if(transaction!=null)
+        transaction.setTitle(updateTransaction.getTitle());
+        transaction.setAmount(updateTransaction.getAmount());
+        transaction.setType(updateTransaction.getType());
+        transaction.setDate(updateTransaction.getDate());
+        transaction.setDescription(updateTransaction.getDescription());
+
+        // Update User
+        if(updateTransaction.getUser() != null)
         {
-            transaction.setTitle(updateTransaction.getTitle());
-            transaction.setAmount(updateTransaction.getAmount());
-            transaction.setType(updateTransaction.getType());
-            transaction.setDate(updateTransaction.getDate());
-            transaction.setDescription(updateTransaction.getDescription());
-
-            if (updateTransaction.getUser() != null) 
-            {
             Long userId = updateTransaction.getUser().getUserId();
-            UserModel user = userRepo.findById(userId).orElse(null);
-            transaction.setUser(user);
-            }
-            if(updateTransaction.getCategory() != null)
-            {
-                Long categoryId = updateTransaction.getCategory().getId();
 
-                CategoryModel category = categoryRepo.findById(categoryId).orElse(null);
-
-                if(category != null)
+                if(userId == null)
                 {
-                transaction.setCategory(category);
+                    throw new IllegalArgumentException("User id is required");
                 }
-            }
 
-            return transactionRepo.save(transaction);
+                UserModel user = userRepo.findById(userId)
+                .orElseThrow(() ->
+                new ResourceNotFoundException
+                ("User not found with id :"+userId)
+            );
+            transaction.setUser(user);
         }
 
-        return null;
-    }
+        // Update Category
+        if(updateTransaction.getCategory() != null)
+        {
+            Long categoryId = updateTransaction.getCategory().getId();
+
+            if(categoryId == null)
+            {
+                throw new IllegalArgumentException("Category id is required");
+            }
+
+
+            CategoryModel category = categoryRepo.findById(categoryId)
+                .orElseThrow(() -> 
+                new ResourceNotFoundException
+                ("Category not found with id :"+ categoryId)
+            );
+
+            transaction.setCategory(category);
+        }
+
+        return transactionRepo.save(transaction);
+}
+
 
     //delete transaction------------------------
     public String deleteTransaction(Long id)
     {
-        TransactionModel transaction=transactionRepo.findById(id).orElse(null);
+        TransactionModel transaction=transactionRepo.findById(id)
+        .orElseThrow(() ->
+            new ResourceNotFoundException
+            ("Transaction not found with id :"+ id)
+        );
 
-        if(transaction!=null)
-        {
-            transactionRepo.deleteById(id);
+        transactionRepo.deleteById(id);
             
-            return "Transaction Deleted Successfully";
-        }
-        
-        return "Transaction Not Found";
+        return "Transaction Deleted Successfully";
 
     }
 
